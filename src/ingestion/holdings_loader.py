@@ -1,4 +1,19 @@
 from pathlib import Path
+import logging
+import pandas as pd
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+REQUIRED_COLUMNS = [
+    "portfolio_id",
+    "valuation_date",
+    "isin",
+    "issuer_name",
+    "asset_type",
+    "currency",
     "market_value",
     "clean_price",
     "coupon_rate",
