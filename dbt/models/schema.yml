@@ -1,27 +1,58 @@
 version: 2
 
 models:
-  - name: fact_portfolio_positions
-    description: Daily portfolio holdings positions for fixed income portfolios.
+  - name: stg_holdings
+    description: "Staged portfolio holdings data with audit fields. Source for all asset positions."
+    columns:
+      - name: isin
+        description: "International Securities Identification Number (Primary Key for assets)."
+        tests:
+          - not_null
+      - name: valuation_date
+        description: "The date for which the asset valuation is recorded."
+        tests:
+          - not_null
+      - name: market_value
+        description: "The reported market value of the holding in local currency."
 
+  - name: stg_credit_ratings
+    description: "Staged credit rating data from multiple agencies (S&P, Moody's, Fitch)."
+    columns:
+      - name: isin
+        description: "Security identifier."
+        tests:
+          - not_null
+          - unique
+      - name: rating_status
+        description: "Indicates if at least one agency rating is available."
+        tests:
+          - accepted_values:
+              values: ['Active', 'Missing']
+
+  - name: dim_assets
+    description: "Golden record for asset metadata, consolidating security attributes and unified ratings."
+    columns:
+      - name: isin
+        description: "Primary key for the asset dimension."
+        tests:
+          - unique
+          - not_null
+      - name: internal_rating_class
+        description: "Unified rating classification: Investment Grade or High Yield."
+        tests:
+          - accepted_values:
+              values: ['Investment Grade', 'High Yield']
+
+  - name: fct_portfolio_analytics
+    description: "Daily fact table for portfolio metrics, including weight and duration contribution."
     columns:
       - name: portfolio_id
-        description: Unique portfolio identifier.
+        description: "Identifier for the specific investment portfolio."
+      - name: market_value_usd
+        description: "Market value converted to USD base currency."
+      - name: portfolio_weight
+        description: "The weight of the individual holding within its portfolio (Sum per portfolio date = 1.0)."
         tests:
-          - not_null
-
-      - name: valuation_date
-        description: Daily portfolio valuation date.
-        tests:
-          - not_null
-          
-      - name: isin
-        description: International Securities Identification Number.
-        tests:
-          - not_null
-
-      - name: market_value
-        description: Market value in local currency.
-
-      - name: duration
-        description: Interest rate duration exposure.
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
