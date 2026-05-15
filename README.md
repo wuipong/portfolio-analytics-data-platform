@@ -1,5 +1,4 @@
 # portfolio-analytics-data-platform
-
 portfolio-analytics-data-platform/
 │
 ├── README.md
