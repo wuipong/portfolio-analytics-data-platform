@@ -58,7 +58,7 @@ def run_pipeline():
         logging.info("Pipeline completed.")
 
     except Exception as e:
-        logging.error(f"💥 Pipeline crashed: {str(e)}")
+        logging.error(f"Pipeline crashed: {str(e)}")
         sys.exit(1)
 
 if __name__ == "__main__":
