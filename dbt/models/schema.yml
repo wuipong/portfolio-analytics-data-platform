@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: fact_portfolio_positions
+    description: Daily portfolio holdings positions for fixed income portfolios.
+
+    columns:
+      - name: portfolio_id
+        description: Unique portfolio identifier.
+        tests:
+          - not_null
+
+      - name: isin
+        description: International Securities Identification Number.
+        tests:
+          - not_null
+
+      - name: valuation_date
+        description: Daily portfolio valuation date.
+        tests:
+          - not_null
+
+      - name: market_value
+        description: Market value in local currency.
+
+      - name: duration
+        description: Interest rate duration exposure.
